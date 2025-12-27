@@ -1,0 +1,54 @@
+#!/bin/bash
+
+# Configuration for display and bus
+DISPLAY=:0
+DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
+
+# 1. Get memory threshold and current usage
+THRESHOLD=70
+RAM_USAGE=$(free | grep Mem | awk '{print $3/$2 * 100.0}')
+USAGE_INT=${RAM_USAGE%.*}
+
+# 2. Get the top process consuming memory
+TOP_PROCESS=$(ps -eo comm --sort=-%mem | head -n 2 | tail -n 1)
+TOP_PID=$(ps -eo pid --sort=-%mem | head -n 2 | tail -n 1)
+
+# 3. Decision Logic
+if [ "$USAGE_INT" -gt "$THRESHOLD" ]; then
+    # Sending Arabic notification to the desktop (safe for system)
+    notify-send "⚠️ Memory Warning" "يا محمود، برنامج ($TOP_PROCESS) سحب الجهاز. تحب أقفله؟" --icon=dialog-warning
+    
+    echo "High usage detected: $USAGE_INT%"
+    echo "Top process: $TOP_PROCESS (PID: $TOP_PID)"
+fi
+
+#END
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
